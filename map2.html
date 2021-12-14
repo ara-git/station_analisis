@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<head>    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_d5dd24bb23044c5ba9b9380c943073f5 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>    
+    
+            <div class="folium-map" id="map_d5dd24bb23044c5ba9b9380c943073f5" ></div>
+        
+</body>
+<script>    
+    
+            var map_d5dd24bb23044c5ba9b9380c943073f5 = L.map(
+                "map_d5dd24bb23044c5ba9b9380c943073f5",
+                {
+                    center: [35.690725, 139.699851],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 13,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_632d6d69bbd7473dacd3a7413ed11127 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_d5dd24bb23044c5ba9b9380c943073f5);
+        
+    
+            var marker_47f59f268b7c4f06a3fa157da3e2821b = L.marker(
+                [35.68131, 139.767234],
+                {}
+            ).addTo(map_d5dd24bb23044c5ba9b9380c943073f5);
+        
+    
+            var icon_764d7b32fc324925a596ca6874fbda3d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_47f59f268b7c4f06a3fa157da3e2821b.setIcon(icon_764d7b32fc324925a596ca6874fbda3d);
+        
+    
+        var popup_5158fbb71722435ab11a741b918b633a = L.popup({"maxWidth": "100%"});
+
+        
+            var html_cde8f8ee2a95466fbd1780f791c864ef = $(`<div id="html_cde8f8ee2a95466fbd1780f791c864ef" style="width: 100.0%; height: 100.0%;">Input:東京</div>`)[0];
+            popup_5158fbb71722435ab11a741b918b633a.setContent(html_cde8f8ee2a95466fbd1780f791c864ef);
+        
+
+        marker_47f59f268b7c4f06a3fa157da3e2821b.bindPopup(popup_5158fbb71722435ab11a741b918b633a)
+        ;
+
+        
+    
+    
+            var marker_cb2597d9df4a43d999db38fbc758be03 = L.marker(
+                [35.79029, 139.258383],
+                {}
+            ).addTo(map_d5dd24bb23044c5ba9b9380c943073f5);
+        
+    
+            var icon_547e7e6eaab24419a9eb4fad08dc2693 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_cb2597d9df4a43d999db38fbc758be03.setIcon(icon_547e7e6eaab24419a9eb4fad08dc2693);
+        
+    
+        var popup_34e1c0d49f264c96b33b7392c9bcb4e4 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_432a1b0834494cfaa0841b8df59e086f = $(`<div id="html_432a1b0834494cfaa0841b8df59e086f" style="width: 100.0%; height: 100.0%;">Input:青梅</div>`)[0];
+            popup_34e1c0d49f264c96b33b7392c9bcb4e4.setContent(html_432a1b0834494cfaa0841b8df59e086f);
+        
+
+        marker_cb2597d9df4a43d999db38fbc758be03.bindPopup(popup_34e1c0d49f264c96b33b7392c9bcb4e4)
+        ;
+
+        
+    
+    
+            var marker_2e96a4831122412ba1b8ceea3f2ddc5e = L.marker(
+                [35.46547, 139.621257],
+                {}
+            ).addTo(map_d5dd24bb23044c5ba9b9380c943073f5);
+        
+    
+            var icon_3c603dc52a3c45a881bd1fc88797bd21 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_2e96a4831122412ba1b8ceea3f2ddc5e.setIcon(icon_3c603dc52a3c45a881bd1fc88797bd21);
+        
+    
+        var popup_8b6ca2eb10574879b5e90cb05e3158fa = L.popup({"maxWidth": "100%"});
+
+        
+            var html_335be324bf44405b91fd25603da73a7d = $(`<div id="html_335be324bf44405b91fd25603da73a7d" style="width: 100.0%; height: 100.0%;">Input:横浜</div>`)[0];
+            popup_8b6ca2eb10574879b5e90cb05e3158fa.setContent(html_335be324bf44405b91fd25603da73a7d);
+        
+
+        marker_2e96a4831122412ba1b8ceea3f2ddc5e.bindPopup(popup_8b6ca2eb10574879b5e90cb05e3158fa)
+        ;
+
+        
+    
+    
+            var marker_740076a38d0d491f827f7ffc4d807c90 = L.marker(
+                [35.80188, 139.717566],
+                {}
+            ).addTo(map_d5dd24bb23044c5ba9b9380c943073f5);
+        
+    
+            var icon_cf8d77fdaf324ca0bc222d7ee847cd4c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_740076a38d0d491f827f7ffc4d807c90.setIcon(icon_cf8d77fdaf324ca0bc222d7ee847cd4c);
+        
+    
+        var popup_9d5086a4fdb442cfb2eeee9116d71c12 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_31035461a440480eafe35dc7be68ac08 = $(`<div id="html_31035461a440480eafe35dc7be68ac08" style="width: 100.0%; height: 100.0%;">Input:川口</div>`)[0];
+            popup_9d5086a4fdb442cfb2eeee9116d71c12.setContent(html_31035461a440480eafe35dc7be68ac08);
+        
+
+        marker_740076a38d0d491f827f7ffc4d807c90.bindPopup(popup_9d5086a4fdb442cfb2eeee9116d71c12)
+        ;
+
+        
+    
+    
+            var marker_b9feea2799ba49ad928c7bac66d0e698 = L.marker(
+                [35.729914, 139.711154],
+                {}
+            ).addTo(map_d5dd24bb23044c5ba9b9380c943073f5);
+        
+    
+            var icon_588a6f7db9a941fd9e730d70f692042d = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_b9feea2799ba49ad928c7bac66d0e698.setIcon(icon_588a6f7db9a941fd9e730d70f692042d);
+        
+    
+        var popup_c37e6f2a707d4624826e55dcb8eff91c = L.popup({"maxWidth": "100%"});
+
+        
+            var html_9a87c9a10db5423190373059f84d3ba4 = $(`<div id="html_9a87c9a10db5423190373059f84d3ba4" style="width: 100.0%; height: 100.0%;">Center:池袋</div>`)[0];
+            popup_c37e6f2a707d4624826e55dcb8eff91c.setContent(html_9a87c9a10db5423190373059f84d3ba4);
+        
+
+        marker_b9feea2799ba49ad928c7bac66d0e698.bindPopup(popup_c37e6f2a707d4624826e55dcb8eff91c)
+        ;
+
+        
+    
+</script>
