@@ -1,13 +1,14 @@
 # とりあえず距離ベースで考える。
 ##関東三県に対応
 
-import os
 import numpy as np
 import pandas as pd
-import math
 from matplotlib import pyplot as plt
 import functions as func
 import streamlit as st
+
+from streamlit_folium import folium_static
+import folium
 
 
 class central_station:
@@ -26,9 +27,10 @@ class central_station:
             self.input_location_list.append([ido[0], keido[0]])
 
         # DF形式に変更
-        self.input_location_list = pd.DataFrame(
+        self.input_location_df = pd.DataFrame(
             self.input_location_list, columns=["lat", "lon"]
         )
+        st.write(self.input_location_df)
 
         ##料金データ（csv）を読み込む
         self.fare_df = pd.read_csv(
@@ -54,9 +56,9 @@ class central_station:
         # n = 3の時は外心を求める。
         if n == 3:
             center_location_list = self._circumcenter(
-                (self.input_location_list[0][0], self.input_location_list[0][1]),
-                (self.input_location_list[1][0], self.input_location_list[1][1]),
-                (self.input_location_list[2][0], self.input_location_list[2][1]),
+                list(self.input_location_df.iloc[0, :]),
+                list(self.input_location_df.iloc[1, :]),
+                list(self.input_location_df.iloc[2, :]),
             )
         # n ≠ 3の時は重心を求める
         else:
@@ -200,3 +202,49 @@ class central_station:
             Center_station_location,
         )
         m.save("map3.html")
+
+
+def make_map(
+    station_data,
+    input_station_name_list,
+    input_location_df,
+    center_station_name,
+    center_station_location,
+):
+    """
+    foliumを利用した地図を作成し、出力する
+
+    Augs
+        station_data:駅のデータ(df)
+        input_station_nake_list:入力駅名
+        input_location_list:入力駅の緯度経度
+        center_station_name:中心駅名
+        center_station_location:中心駅の緯度経度
+    """
+    # 地図の初期値として、新宿駅を指定
+    Sinjuku = station_data[station_data["station_name"] == "新宿"].iloc[0]
+    Sinjuku_location = [Sinjuku["station_lat"], Sinjuku["station_lon"]]
+
+    # マーカーを置いていく
+    # 入力地点にマーカーを置く
+    m = folium.Map(location=Sinjuku_location, tiles="OpenStreetMap", zoom_start=13)
+    for i in range(len(input_location_df)):
+        # 緯度経度のリストを作成する
+        location = list(input_location_df.iloc[i, :])
+        # 地図を作る
+        marker = folium.Marker(
+            location=location,
+            popup="Input:" + input_station_name_list[i],
+            icon=folium.Icon(color="orange"),
+        )
+
+        m.add_child(marker)
+
+    # 中心地点にマーカーを置く
+    marker = folium.Marker(
+        location=center_station_location,
+        popup="Center:" + center_station_name,
+        icon=folium.Icon(color="red"),
+    )
+    m.add_child(marker)
+    folium_static(m)

@@ -54,7 +54,12 @@ if len(input_station_name) != 0:
     ) = ins_center.calc_center_location_base()
     st.write(center_station_name, center_station_location)
 
-    st.write(ins_center.input_location_list)
     # 地図を開く
-    st.map(ins_center.input_location_list)
-
+    input_location_df = ins_center.input_location_df
+    logic.make_map(
+        station_data,
+        input_station_name_list,
+        input_location_df,
+        center_station_name,
+        center_station_location,
+    )
