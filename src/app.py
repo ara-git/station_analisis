@@ -36,30 +36,36 @@ input_station_name_list.append(st.sidebar.selectbox("駅8", station_name_list))
 # Noneをリストから除く
 input_station_name_list = list(filter(None, input_station_name_list))
 # 重複を除く
-input_station_name = list(set(input_station_name_list))
+input_station_name_list = list(set(input_station_name_list))
 
 st.title("集合駅を決める")
 st.write(input_station_name_list)
 
-if len(input_station_name) != 0:
+if len(input_station_name_list) != 0:
     # 中心を計算する
     # インスタンスを作成
     ins_center = logic.central_station(station_data, input_station_name_list)
 
-    # 緯度経度ベースで中心駅を求める
-    st.header("緯度経度ベースで中心駅を求める")
+    ###
+    # 緯度経度ベース・合計値最小化で中心駅を求める
+    st.header("合計移動距離を最小化する")
     (
         center_station_name,
         center_station_location,
-    ) = ins_center.calc_center_location_base()
-    st.write(center_station_name, center_station_location)
+    ) = ins_center.calc_center_location_sum()
+    st.write(center_station_name)
 
     # 地図を開く
-    input_location_df = ins_center.input_location_df
-    logic.make_map(
-        station_data,
-        input_station_name_list,
-        input_location_df,
+    ins_center.make_map()
+
+    ###
+    # 緯度経度ベース・最大値最小化で中心駅を求める
+    st.header("最大移動距離と最小移動距離を最小化する")
+    (
         center_station_name,
         center_station_location,
-    )
+    ) = ins_center.calc_center_location_fairness()
+    st.write(center_station_name)
+
+    # 地図を開く
+    ins_center.make_map()

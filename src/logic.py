@@ -4,8 +4,8 @@
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
-import functions as func
 import streamlit as st
+import scipy.optimize
 
 from streamlit_folium import folium_static
 import folium
@@ -15,6 +15,7 @@ class central_station:
     def __init__(self, station_data, input_station_name):
         self.station_data = station_data
         self.input_station_name = input_station_name
+        self.n = len(self.input_station_name)
 
         # 駅名を検索して、緯度と経度を取得
         self.input_location_list = []
@@ -30,18 +31,15 @@ class central_station:
         self.input_location_df = pd.DataFrame(
             self.input_location_list, columns=["lat", "lon"]
         )
-        st.write(self.input_location_df)
 
         ##料金データ（csv）を読み込む
         self.fare_df = pd.read_csv(
             "./data/fare/fare_all.csv", encoding="shift jis", index_col="Unnamed: 0"
         )
 
-    def calc_center_location_base(self):
+    def calc_center_location_sum(self):
         """
         駅名を入力し、中心の座標とそこから近い駅（の名前と座標）を出力する関数
-        距離ベースで計算を行う。具体的には、n = 3の時は外心（全員の移動距離が同じ）
-        n != 3の時は重心とする。
         
         Returns
             Station_name：入力した駅名
@@ -50,23 +48,63 @@ class central_station:
             Ceneter_station_name：中心地点から近い駅名
             Center_station_location：中心地点から近い駅の緯度経度（リスト）
         """
-        n = len(self.input_station_name)
-
         # 中心の緯度経度を求める
-        # n = 3の時は外心を求める。
-        if n == 3:
+        # 重心を求める
+        center_location_list = np.average(self.input_location_list, axis=0)
+
+        # 重心からの最寄駅を求める
+        self._search_nearest_station(center_location_list)
+        return (
+            self.center_station_name,
+            self.center_station_location,
+        )
+
+    def calc_center_location_fairness(self):
+        """
+        最大移動距離と最小移動距離の差を最小化する（公平な場所）
+        n >= 3の時はscipyの最適化関数を使う
+        n = 2の時は一意に定まらないので、中点を使う
+        """
+        # 入力を設定
+        input_lat = np.array(self.input_location_df["lat"])
+        input_lon = np.array(self.input_location_df["lon"])
+
+        # 最適な座標を計算する
+        ## 初期値を設定する
+        coordinate = [35, 140]
+        ## 計算する
+        if self.n == 2:
+            center_location_list = np.average(self.input_location_list, axis=0)
+        else:
+            center_location_list = scipy.optimize.fmin_bfgs(
+                f=self._objective_function, x0=coordinate, args=(input_lat, input_lon)
+            )
+        """
+        # n== 3の時は 外心を計算する
+        if self.n == 3:
             center_location_list = self._circumcenter(
                 list(self.input_location_df.iloc[0, :]),
                 list(self.input_location_df.iloc[1, :]),
                 list(self.input_location_df.iloc[2, :]),
             )
-        # n ≠ 3の時は重心を求める
-        else:
-            center_location_list = np.average(self.input_location_list, axis=0)
+            st.write("外心:", center_location_list)
+        """
+        # 中心からの最寄駅を求める
+        self._search_nearest_station(center_location_list)
+        return (
+            self.center_station_name,
+            self.center_station_location,
+        )
 
-        # st.write(center_location_list)
-        # st.write(self.station_data["station_lat"])
-        # st.write(self.station_data["station_lon"])
+    def _search_nearest_station(self, center_location_list):
+        """
+        緯度と経度のリストから最寄駅を計算する
+        Augs
+            求めたい緯度と経度のリスト
+        Return
+            self.center_station_name:最寄駅の名前
+            self.center_station_location:最寄駅の緯度経度
+        """
 
         # 中心から最も近い駅を求める
         min_index = np.argmin(
@@ -74,16 +112,21 @@ class central_station:
             + (self.station_data["station_lon"] - center_location_list[1]) ** 2
         )
         center_station = self.station_data.iloc[min_index]
-        center_station_name = center_station["station_name"]
+        self.center_station_name = center_station["station_name"]
 
         center_station_ido = center_station["station_lat"]
         center_station_keido = center_station["station_lon"]
-        center_station_location = [center_station_ido, center_station_keido]
+        self.center_station_location = [center_station_ido, center_station_keido]
 
-        return (
-            center_station_name,
-            center_station_location,
-        )
+    def _objective_function(self, coordinate, input_lat, input_lon):
+        """目的関数"""
+        x = coordinate[0]
+        y = coordinate[1]
+
+        distance_list = (input_lat - x) ** 2 + (input_lon - y) ** 2
+        unfairness = max(distance_list) - min(distance_list)
+
+        return unfairness
 
     # 1 2つの長さを求める
     def _length(self, p1, p2):
@@ -159,92 +202,82 @@ class central_station:
         )
         return center_
 
-        # ここから、料金ベースでの中心を求める。
+    def make_map(self):
+        """
+        foliumを利用した地図を作成し、出力する
+        """
+        # 地図の初期値として、新宿駅を指定
+        Sinjuku = self.station_data[self.station_data["station_name"] == "新宿"].iloc[0]
+        Sinjuku_location = [Sinjuku["station_lat"], Sinjuku["station_lon"]]
 
-        # 料金の合計値を最小にするような駅を計算する
-        res_center2 = func.calc_center_fare_sum(Station_name, station_data, Fare)
-        (
-            Station_name,
-            Input_location,
-            Center_station_name,
-            Center_station_location,
-            min_of_sum,
-        ) = res_center2
-        print("中心の駅, 料金ベース, 合計値最小：", Center_station_name)
+        # マーカーを置いていく
+        # 入力地点にマーカーを置く
+        m = folium.Map(location=Sinjuku_location, tiles="OpenStreetMap", zoom_start=10)
+        for i in range(len(self.input_location_df)):
+            # 緯度経度のリストを作成する
+            location = list(self.input_location_df.iloc[i, :])
+            # 地図を作る
+            marker = folium.Marker(
+                location=location,
+                popup="Input:" + self.input_station_name[i],
+                icon=folium.Icon(color="orange"),
+            )
 
-        m = func.make_map(
-            station_data,
-            Station_name,
-            Input_location,
-            Center_location,
-            Center_station_name,
-            Center_station_location,
-        )
-        m.save("map2.html")
+            m.add_child(marker)
 
-        # 料金の最大値を最小にするような駅を計算する
-        res_center3 = func.calc_center_fare_min(Station_name, station_data, Fare)
-        (
-            Station_name,
-            Input_location,
-            Center_station_name,
-            Center_station_location,
-            min_of_max,
-        ) = res_center3
-        print("中心の駅, 料金ベース, 合計値最小：", Center_station_name)
-
-        m = func.make_map(
-            station_data,
-            Station_name,
-            Input_location,
-            Center_location,
-            Center_station_name,
-            Center_station_location,
-        )
-        m.save("map3.html")
-
-
-def make_map(
-    station_data,
-    input_station_name_list,
-    input_location_df,
-    center_station_name,
-    center_station_location,
-):
-    """
-    foliumを利用した地図を作成し、出力する
-
-    Augs
-        station_data:駅のデータ(df)
-        input_station_nake_list:入力駅名
-        input_location_list:入力駅の緯度経度
-        center_station_name:中心駅名
-        center_station_location:中心駅の緯度経度
-    """
-    # 地図の初期値として、新宿駅を指定
-    Sinjuku = station_data[station_data["station_name"] == "新宿"].iloc[0]
-    Sinjuku_location = [Sinjuku["station_lat"], Sinjuku["station_lon"]]
-
-    # マーカーを置いていく
-    # 入力地点にマーカーを置く
-    m = folium.Map(location=Sinjuku_location, tiles="OpenStreetMap", zoom_start=13)
-    for i in range(len(input_location_df)):
-        # 緯度経度のリストを作成する
-        location = list(input_location_df.iloc[i, :])
-        # 地図を作る
+        # 中心地点にマーカーを置く
         marker = folium.Marker(
-            location=location,
-            popup="Input:" + input_station_name_list[i],
-            icon=folium.Icon(color="orange"),
+            location=self.center_station_location,
+            popup="Center:" + self.center_station_name,
+            icon=folium.Icon(color="red"),
         )
-
         m.add_child(marker)
+        folium_static(m)
 
-    # 中心地点にマーカーを置く
-    marker = folium.Marker(
-        location=center_station_location,
-        popup="Center:" + center_station_name,
-        icon=folium.Icon(color="red"),
-    )
-    m.add_child(marker)
-    folium_static(m)
+
+"""
+# ここから、料金ベースでの中心を求める。
+
+# 料金の合計値を最小にするような駅を計算する
+res_center2 = func.calc_center_fare_sum(Station_name, station_data, Fare)
+(
+    Station_name,
+    Input_location,
+    Center_station_name,
+    Center_station_location,
+    min_of_sum,
+) = res_center2
+print("中心の駅, 料金ベース, 合計値最小：", Center_station_name)
+
+m = func.make_map(
+    station_data,
+    Station_name,
+    Input_location,
+    Center_location,
+    Center_station_name,
+    Center_station_location,
+)
+m.save("map2.html")
+
+# 料金の最大値を最小にするような駅を計算する
+res_center3 = func.calc_center_fare_min(Station_name, station_data, Fare)
+(
+    Station_name,
+    Input_location,
+    Center_station_name,
+    Center_station_location,
+    min_of_max,
+) = res_center3
+print("中心の駅, 料金ベース, 合計値最小：", Center_station_name)
+
+m = func.make_map(
+    station_data,
+    Station_name,
+    Input_location,
+    Center_location,
+    Center_station_name,
+    Center_station_location,
+)
+m.save("map3.html")
+"""
+
