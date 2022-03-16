@@ -12,8 +12,19 @@ import folium
 
 
 class central_station:
-    def __init__(self, station_data, input_station_name):
+    def __init__(self, station_data, station_name_list, input_station_name):
+        """
+        Aug
+            station_data:駅の緯度経度に関するデータ
+            station_name_list:駅の名前に関するデータ
+            input_station_name:入力された駅名
+        """
         self.station_data = station_data
+        # Noneが含まれているので、削除する
+        self.station_name_list = list(filter(None, station_name_list))
+        # 料金ベースで考える際に、御岳山が邪魔になるので削除する
+        self.station_name_list.remove("御岳山")
+
         self.input_station_name = input_station_name
         self.n = len(self.input_station_name)
 
@@ -32,7 +43,7 @@ class central_station:
             self.input_location_list, columns=["lat", "lon"]
         )
 
-        ##料金データ（csv）を読み込む
+        # 料金データ（csv）を読み込む
         self.fare_df = pd.read_csv(
             "./data/fare/fare_all.csv", encoding="shift jis", index_col="Unnamed: 0"
         )
@@ -234,50 +245,35 @@ class central_station:
         m.add_child(marker)
         folium_static(m)
 
+    def calc_center_fare_sum(self):
+        """
+        料金ベースで最適な駅を考える。料金の合計値を最小にするような駅を考える。
+        Augs
+            Fare:料金データ
+        """
+        # 全員の料金の合計値が最小となるような駅を検索する。
+        sum_of_fare_list = []
 
-"""
-# ここから、料金ベースでの中心を求める。
+        # 全ての駅名内でイテレート
+        for name in self.station_name_list:
+            ##全員の料金の合計値を計算する。
+            sum_of_fare = 0
+            for input_name in self.input_station_name:
+                sum_of_fare += self.fare_df[name][input_name]
 
-# 料金の合計値を最小にするような駅を計算する
-res_center2 = func.calc_center_fare_sum(Station_name, station_data, Fare)
-(
-    Station_name,
-    Input_location,
-    Center_station_name,
-    Center_station_location,
-    min_of_sum,
-) = res_center2
-print("中心の駅, 料金ベース, 合計値最小：", Center_station_name)
+            ##料金の合計値を格納
+            sum_of_fare_list.append(sum_of_fare)
 
-m = func.make_map(
-    station_data,
-    Station_name,
-    Input_location,
-    Center_location,
-    Center_station_name,
-    Center_station_location,
-)
-m.save("map2.html")
+        ##料金の合計値を最小化するような駅を検索する
+        min_of_sum = min(sum_of_fare_list)
+        min_index = sum_of_fare_list.index(min_of_sum)
 
-# 料金の最大値を最小にするような駅を計算する
-res_center3 = func.calc_center_fare_min(Station_name, station_data, Fare)
-(
-    Station_name,
-    Input_location,
-    Center_station_name,
-    Center_station_location,
-    min_of_max,
-) = res_center3
-print("中心の駅, 料金ベース, 合計値最小：", Center_station_name)
+        # 駅名と緯度経度を求める
+        center_station = self.station_data.iloc[min_index]
+        self.center_station_name = center_station["station_name"]
+        self.center_station_location = [
+            center_station["station_lat"],
+            center_station["station_lon"],
+        ]
 
-m = func.make_map(
-    station_data,
-    Station_name,
-    Input_location,
-    Center_location,
-    Center_station_name,
-    Center_station_location,
-)
-m.save("map3.html")
-"""
-
+        return self.center_station_name, self.center_station_location

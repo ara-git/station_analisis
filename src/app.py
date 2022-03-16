@@ -3,8 +3,10 @@ streamlit appのためのファイル
 """
 import pandas as pd
 import streamlit as st
-
+import warnings
 import logic
+
+warnings.simplefilter("ignore")
 
 # 駅データを読み込む
 ##関東三県に対応
@@ -44,7 +46,9 @@ st.write(input_station_name_list)
 if len(input_station_name_list) != 0:
     # 中心を計算する
     # インスタンスを作成
-    ins_center = logic.central_station(station_data, input_station_name_list)
+    ins_center = logic.central_station(
+        station_data, station_name_list, input_station_name_list
+    )
 
     ###
     # 緯度経度ベース・合計値最小化で中心駅を求める
@@ -59,12 +63,20 @@ if len(input_station_name_list) != 0:
     ins_center.make_map()
 
     ###
-    # 緯度経度ベース・最大値最小化で中心駅を求める
+    # 緯度経度ベース・最大値と最小値の差の最小化で中心駅を求める
     st.header("最大移動距離と最小移動距離を最小化する")
     (
         center_station_name,
         center_station_location,
     ) = ins_center.calc_center_location_fairness()
+    st.write(center_station_name)
+
+    # 地図を開く
+    ins_center.make_map()
+
+    ###
+    # 料金ベース・合計値最大化で中心駅を求める
+    (center_station_name, center_station_location,) = ins_center.calc_center_fare_sum()
     st.write(center_station_name)
 
     # 地図を開く
