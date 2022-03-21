@@ -277,3 +277,50 @@ class central_station:
         ]
 
         return self.center_station_name, self.center_station_location
+
+    def calc_center_fare_fairness(self):
+        """
+        料金ベースで最適な駅を考える。料金の合計値を最小にするような駅を考える。
+        Augs
+            Fare:料金データ
+        """
+        # 最大値と最小値の差分を記録するリスト
+        diff_of_fare_list = []
+        max_list = []
+        min_list = []
+
+        # 全ての駅名内でイテレート
+        for name in self.station_name_list:
+            # ある駅に対する料金リスト
+            fair_list = []
+            ##全員の料金の合計値を計算する。
+            for input_name in self.input_station_name:
+                fair_list.append(self.fare_df[name][input_name])
+
+            ## 料金の最大値と最小値の差を格納する
+            diff_of_fare_list.append(max(fair_list) - min(fair_list))
+            max_list.append(max(fair_list))
+            min_list.append(min(fair_list))
+
+        st.write(self.fare_df)
+        st.write(max_list)
+        st.write(min_list)
+        st.write(diff_of_fare_list)
+        ##料金の最大値と最小値の差を最小化するような駅を検索する
+        min_of_dif_fare = min(diff_of_fare_list)
+        st.write(min_of_dif_fare)
+
+        min_index = diff_of_fare_list.index(min_of_dif_fare)
+        st.write(min_index)
+        st.write("max", max_list[min_index])
+        st.write("min", min_list[min_index])
+
+        # 駅名と緯度経度を求める
+        center_station = self.station_data.iloc[min_index]
+        self.center_station_name = center_station["station_name"]
+        self.center_station_location = [
+            center_station["station_lat"],
+            center_station["station_lon"],
+        ]
+
+        return self.center_station_name, self.center_station_location

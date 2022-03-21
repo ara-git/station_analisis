@@ -75,8 +75,19 @@ if len(input_station_name_list) != 0:
     ins_center.make_map()
 
     ###
-    # 料金ベース・合計値最大化で中心駅を求める
+    # 料金ベース・合計値最小化で中心駅を求める
     (center_station_name, center_station_location,) = ins_center.calc_center_fare_sum()
+    st.write(center_station_name)
+
+    # 地図を開く
+    ins_center.make_map()
+
+    ###
+    # 料金ベース・最大値と最小値の差の最小化で中心駅を求める
+    (
+        center_station_name,
+        center_station_location,
+    ) = ins_center.calc_center_fare_fairness()
     st.write(center_station_name)
 
     # 地図を開く
