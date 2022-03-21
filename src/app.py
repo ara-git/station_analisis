@@ -44,7 +44,7 @@ st.title("集合駅を決める")
 st.write("最寄駅を入力し、最適な集合駅を計算します。詳細は")
 st.write("https://github.com/ara-git/station_analysis")
 st.write("を参照してください。")
-if len(input_station_name_list) != 0:
+if len(input_station_name_list) >= 2:
     # 中心を計算する
     # インスタンスを作成
     ins_center = logic.central_station(
