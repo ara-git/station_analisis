@@ -41,7 +41,9 @@ input_station_name_list = list(filter(None, input_station_name_list))
 input_station_name_list = list(set(input_station_name_list))
 
 st.title("集合駅を決める")
-
+st.write("最寄駅を入力し、最適な集合駅を計算します。詳細は")
+st.write("https://github.com/ara-git/station_analysis")
+st.write("を参照してください。")
 if len(input_station_name_list) != 0:
     # 中心を計算する
     # インスタンスを作成
@@ -99,4 +101,5 @@ if len(input_station_name_list) != 0:
     # 地図を開く
     ins_center.make_map()
 
-###
+else:
+    st.header("左のサイドバーに駅名を入力して下さい")
