@@ -1,6 +1,6 @@
 # station_analisis
 ## これはなに
-最寄駅を入力すると最適な集合駅を計算してくれる[Webアプリ](https://share.streamlit.io/ara-git/station_analysis/main/src/app.py)を[Streamlit, Streamlit Cloud](https://streamlit.io/cloud)で作りました。以下では、アプリの使い方を説明します。
+最寄駅を入力すると最適な集合駅を計算してくれる[Webアプリ](https://share.streamlit.io/ara-git/station_analysis/main/src/app.py)を[Streamlit, Streamlit Cloud](https://streamlit.io/cloud)で作りました。以下ではアプリの使い方について説明します。
 
 ## 使い方
 左のサイドバーを開き、駅名を入力します（最低二つ）。最大８駅（人）まで対応しています。
