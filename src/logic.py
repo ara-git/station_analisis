@@ -3,7 +3,6 @@
 
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
 import streamlit as st
 import scipy.optimize
 
@@ -90,16 +89,7 @@ class central_station:
             center_location_list = scipy.optimize.fmin_bfgs(
                 f=self._objective_function, x0=coordinate, args=(input_lat, input_lon)
             )
-        """
-        # n== 3の時は 外心を計算する
-        if self.n == 3:
-            center_location_list = self._circumcenter(
-                list(self.input_location_df.iloc[0, :]),
-                list(self.input_location_df.iloc[1, :]),
-                list(self.input_location_df.iloc[2, :]),
-            )
-            st.write("外心:", center_location_list)
-        """
+
         # 中心からの最寄駅を求める
         self._search_nearest_station(center_location_list)
         return (
