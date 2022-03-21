@@ -269,7 +269,7 @@ class central_station:
             center_station["station_lon"],
         ]
 
-        return self.center_station_name, self.center_station_location
+        return self.center_station_name, self.center_station_location, min_of_sum
 
     def calc_center_fare_fairness(self):
         """
