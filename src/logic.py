@@ -21,9 +21,12 @@ class central_station:
         self.station_data = station_data
         # Noneが含まれているので、削除する
         self.station_name_list = list(filter(None, station_name_list))
+
         # 料金ベースで考える際に、御岳山が邪魔になるので削除する
         self.station_name_list.remove("御岳山")
-
+        self.station_data = self.station_data[
+            self.station_data["station_name"] != "御岳山"
+        ].reset_index()
         self.input_station_name = input_station_name
         self.n = len(self.input_station_name)
 
@@ -270,9 +273,8 @@ class central_station:
 
     def calc_center_fare_fairness(self):
         """
-        料金ベースで最適な駅を考える。料金の合計値を最小にするような駅を考える。
-        Augs
-            Fare:料金データ
+        料金ベースで最適な駅を考える。
+        最大値と最小の差を最小化する。
         """
         # 最大値と最小値の差分を記録するリスト
         diff_of_fare_list = []
@@ -283,7 +285,7 @@ class central_station:
         for name in self.station_name_list:
             # ある駅に対する料金リスト
             fair_list = []
-            ##全員の料金の合計値を計算する。
+            ##全員の料金を計算する。
             for input_name in self.input_station_name:
                 fair_list.append(self.fare_df[name][input_name])
 
@@ -294,7 +296,6 @@ class central_station:
 
         ##料金の最大値と最小値の差を最小化するような駅を検索する
         min_of_dif_fare = min(diff_of_fare_list)
-
         min_index = diff_of_fare_list.index(min_of_dif_fare)
 
         # 駅名と緯度経度を求める

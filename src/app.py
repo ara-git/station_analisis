@@ -41,7 +41,6 @@ input_station_name_list = list(filter(None, input_station_name_list))
 input_station_name_list = list(set(input_station_name_list))
 
 st.title("集合駅を決める")
-st.write(input_station_name_list)
 
 if len(input_station_name_list) != 0:
     # 中心を計算する
