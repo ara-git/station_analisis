@@ -64,7 +64,7 @@ if len(input_station_name_list) != 0:
 
     ###
     # 緯度経度ベース・最大値と最小値の差の最小化で中心駅を求める
-    st.header("最大移動距離と最小移動距離を最小化する")
+    st.header("最大移動距離と最小移動距離の差を最小化する")
     (
         center_station_name,
         center_station_location,
@@ -76,6 +76,7 @@ if len(input_station_name_list) != 0:
 
     ###
     # 料金ベース・合計値最小化で中心駅を求める
+    st.header("合計費用を最小化する")
     (center_station_name, center_station_location,) = ins_center.calc_center_fare_sum()
     st.write(center_station_name)
 
@@ -84,6 +85,7 @@ if len(input_station_name_list) != 0:
 
     ###
     # 料金ベース・最大値と最小値の差の最小化で中心駅を求める
+    st.header("最大費用と最小費用の差を最小化する")
     (
         center_station_name,
         center_station_location,
