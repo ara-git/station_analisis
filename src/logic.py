@@ -302,18 +302,10 @@ class central_station:
             max_list.append(max(fair_list))
             min_list.append(min(fair_list))
 
-        st.write(self.fare_df)
-        st.write(max_list)
-        st.write(min_list)
-        st.write(diff_of_fare_list)
         ##料金の最大値と最小値の差を最小化するような駅を検索する
         min_of_dif_fare = min(diff_of_fare_list)
-        st.write(min_of_dif_fare)
 
         min_index = diff_of_fare_list.index(min_of_dif_fare)
-        st.write(min_index)
-        st.write("max", max_list[min_index])
-        st.write("min", min_list[min_index])
 
         # 駅名と緯度経度を求める
         center_station = self.station_data.iloc[min_index]
