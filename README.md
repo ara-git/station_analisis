@@ -1,5 +1,3 @@
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=default"></script>
-
 # station_analisis
 ## これはなに
 最寄駅を入力すると最適な集合駅を計算、出力する[Webアプリ](https://share.streamlit.io/ara-git/station_analysis/main/src/app.py)のソースです。[Streamlit, Streamlit Cloud](https://streamlit.io/cloud)で作りました。以下では、アプリの使い方も説明します。
