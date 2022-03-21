@@ -98,3 +98,5 @@ if len(input_station_name_list) != 0:
 
     # 地図を開く
     ins_center.make_map()
+
+###
