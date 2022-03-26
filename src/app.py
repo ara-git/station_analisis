@@ -53,7 +53,7 @@ if len(input_station_name_list) >= 2:
 
     ###
     # 緯度経度ベース・合計値最小化で中心駅を求める
-    st.header("合計移動距離を最小化する")
+    st.header("合計直線距離を最小化する")
     (
         center_station_name,
         center_station_location,
@@ -65,7 +65,7 @@ if len(input_station_name_list) >= 2:
 
     ###
     # 緯度経度ベース・最大値と最小値の差の最小化で中心駅を求める
-    st.header("最大移動距離と最小移動距離の差を最小化する")
+    st.header("最大直線距離と最小直線距離の差を最小化する")
     (
         center_station_name,
         center_station_location,

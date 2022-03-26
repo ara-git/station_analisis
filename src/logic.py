@@ -74,7 +74,7 @@ class central_station:
 
     def calc_center_location_fairness(self):
         """
-        最大移動距離と最小移動距離の差を最小化する（公平な場所）
+        最大直線距離と最小直線距離の差を最小化する（公平な場所）
         n >= 3の時はscipyの最適化関数を使う
         n = 2の時は一意に定まらないので、中点を使う
         """
