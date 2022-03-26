@@ -58,7 +58,7 @@ if len(input_station_name_list) >= 2:
         center_station_name,
         center_station_location,
     ) = ins_center.calc_center_location_sum()
-    st.write(center_station_name)
+    st.write("集合駅：", center_station_name)
 
     # 地図を開く
     ins_center.make_map()
@@ -70,7 +70,7 @@ if len(input_station_name_list) >= 2:
         center_station_name,
         center_station_location,
     ) = ins_center.calc_center_location_fairness()
-    st.write(center_station_name)
+    st.write("集合駅：", center_station_name)
 
     # 地図を開く
     ins_center.make_map()
@@ -81,10 +81,13 @@ if len(input_station_name_list) >= 2:
     (
         center_station_name,
         center_station_location,
+        optimal_fare_df,
         min_of_sum,
     ) = ins_center.calc_center_fare_sum()
-    st.write(center_station_name)
-    st.write("合計費用:" + str(min_of_sum))
+
+    st.write("集合駅：", center_station_name)
+    st.write("合計費用:", min_of_sum, "円")
+    st.table(optimal_fare_df)
 
     # 地図を開く
     ins_center.make_map()
@@ -95,8 +98,13 @@ if len(input_station_name_list) >= 2:
     (
         center_station_name,
         center_station_location,
+        optimal_fare_df,
+        min_of_dif_fare,
     ) = ins_center.calc_center_fare_fairness()
-    st.write(center_station_name)
+
+    st.write("集合駅：", center_station_name)
+    st.write("最大費用と最小費用の差：", min_of_dif_fare, "円")
+    st.table(optimal_fare_df)
 
     # 地図を開く
     ins_center.make_map()

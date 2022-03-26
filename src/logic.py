@@ -269,7 +269,25 @@ class central_station:
             center_station["station_lon"],
         ]
 
-        return self.center_station_name, self.center_station_location, min_of_sum
+        # 各駅からの料金を計算し、リストにする
+        optimal_fare_list = []
+        for input_name in self.input_station_name:
+            optimal_fare_list.append(self.fare_df[self.center_station_name][input_name])
+        # dataframeに変更する
+        self.optimal_fare_df = pd.DataFrame(
+            list(zip(self.input_station_name, optimal_fare_list)),
+            columns=["最寄駅", "料金（概算）"],
+        )
+        self.optimal_fare_df["料金（概算）"] = self.optimal_fare_df["料金（概算）"].astype(int)
+
+        # 出力用に型を変更する
+        min_of_sum = str(int(min_of_sum))
+        return (
+            self.center_station_name,
+            self.center_station_location,
+            self.optimal_fare_df,
+            min_of_sum,
+        )
 
     def calc_center_fare_fairness(self):
         """
@@ -300,10 +318,30 @@ class central_station:
 
         # 駅名と緯度経度を求める
         center_station = self.station_data.iloc[min_index]
+
         self.center_station_name = center_station["station_name"]
         self.center_station_location = [
             center_station["station_lat"],
             center_station["station_lon"],
         ]
 
-        return self.center_station_name, self.center_station_location
+        # 各駅からの料金を計算し、リストにする
+        optimal_fare_list = []
+        for input_name in self.input_station_name:
+            optimal_fare_list.append(self.fare_df[self.center_station_name][input_name])
+        # dataframeに変更する
+        self.optimal_fare_df = pd.DataFrame(
+            list(zip(self.input_station_name, optimal_fare_list)),
+            columns=["最寄駅", "料金（概算）"],
+        )
+        self.optimal_fare_df["料金（概算）"] = self.optimal_fare_df["料金（概算）"].astype(int)
+
+        # 出力用に型を変更する
+        min_of_dif_fare = str(int(min_of_dif_fare))
+        return (
+            self.center_station_name,
+            self.center_station_location,
+            self.optimal_fare_df,
+            min_of_dif_fare,
+        )
+
